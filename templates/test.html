@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigger Python from Web</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#" id="run-script-btn">Run Python Script</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <h1>Trigger Python Script from Web</h1>
+        <p>Click the button to run the Python script!</p>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        async function startFlaskServer() {
+            try {
+                // Try sending a request to Flask (check if it's running)
+                const response = await fetch('http://127.0.0.1:5000/run-python-script', {
+                    method: 'POST',
+                });
+                const data = await response.json();
+                document.getElementById("output").innerText = data.output || data.error;
+            } catch (error) {
+                alert("Starting Flask server...");
+                startServer();
+            }
+        }
+
+        function startServer() {
+            fetch('http://localhost:5000/run-python-script', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("output").innerText = data.output || data.error;
+                })
+                .catch((error) => {
+                    console.error("Error starting server:", error);
+                    alert("Could not connect to Flask server. Make sure it's running!");
+                });
+        }
+
+        document.getElementById("run-script-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            startFlaskServer();
+        });
+    </script>
+</body>
+</html>

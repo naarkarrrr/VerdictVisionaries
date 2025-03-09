@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCRMqoFCjV8QFTRl5S7COzGSSGNwJlK1n8",
+            authDomain: "edupulse-8ce1e.firebaseapp.com",
+            projectId: "edupulse-8ce1e",
+            storageBucket: "edupulse-8ce1e.appspot.com",
+            messagingSenderId: "618388294203",
+            appId: "1:618388294203:web:100a83ac711af641826a1e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    document.getElementById("user-info").textContent = `Logged in as: ${userData.firstName} ${userData.lastName}`;
+                    currentUser.fullName = `${userData.firstName} ${userData.lastName}`;
+                } else {
+                    const fullName = user.displayName ? user.displayName.split(" ") : ["Unknown", "User"];
+                    const firstName = fullName[0];
+                    const lastName = fullName[1] || "User";
+
+                    await setDoc(userDocRef, { firstName, lastName });
+
+                    document.getElementById("user-info").textContent = `Logged in as: ${firstName} ${lastName}`;
+                    currentUser.fullName = `${firstName} ${lastName}`;
+                }
+            } else {
+                currentUser = null;
+                document.getElementById("user-info").textContent = "Not logged in";
+            }
+        });
+
+        window.saveScore = async function (score) {
+            if (!currentUser) {
+                console.error("No user is logged in!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "quizScores"), {
+                    fullName: currentUser.fullName,
+                    score: score,
+                    timestamp: new Date()
+                });
+                console.log("Score saved successfully!");
+            } catch (error) {
+                console.error("Error saving score: ", error);
+            }
+        };
+    </script>
+    <style>
+        /* body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+        } */
+        .site_header {
+    position: relative; /* Ensure it is not fixed */
+    z-index: 10; /* Keep it above content */
+    background-color: white; /* Ensure visibility */
+    width: 100%;
+}
+
+.Quiz-container {
+    max-width: 500px;
+    margin: 100px auto 5%; /* Add top margin to push content below navbar */
+    background: rgba(255, 255, 255, 0.15);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .question {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        .option {
+            display: block;
+            padding: 12px;
+            margin: 10px;
+            background: white;
+            color: black;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            transform: scale(1.05);
+            background: #ffcc00;
+        }
+        .correct {
+            background: #28a745 !important;
+        }
+        .incorrect {
+            background: #dc3545 !important;
+        }
+        #score {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .next-btn {
+            background: #ffcc00;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .next-btn:hover {
+            background: #ff9900;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔹 Header Added Here -->
+    <header class="site_header site_header_1">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col col-lg-3 col-5">
+                    <div class="site_logo">
+                        <a class="site_link" href="index.html">
+                            <img src="assets/images/logo/EduPulse.svg" alt="EduPulse - Online Learning Platform">
+                        </a>
+                    </div>
+                </div>
+                <div class="col col-lg-6 col-2">
+                    <nav class="main_menu navbar navbar-expand-lg">
+                        <div class="main_menu_inner collapse navbar-collapse justify-content-center" id="main_menu_dropdown">
+                            <ul class="main_menu_list unordered_list_center">
+                                <li><a class="nav-link" href="index.html">Home</a></li>
+                                <li class="active"><a class="nav-link" href="#">Courses</a></li>
+                                <li><a class="nav-link" href="#">AI Mentor</a></li>
+                                <li><a class="nav-link" href="#">Challenges</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Quiz Content -->
+    <div class="Quiz-container">
+        <h2>Quiz App</h2>
+        <p id="user-info">Not logged in</p>
+        <div id="quiz-container">
+            <p id="question" class="question"></p>
+            <div id="options"></div>
+            <button class="next-btn" onclick="nextQuestion()">Next</button>
+        </div>
+        <p id="score"></p>
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
+            { question: "Which is the capital of France?", options: ["Paris", "Berlin", "Madrid", "Rome"], answer: "Paris" },
+            { question: "What is the largest planet?", options: ["Earth", "Mars", "Jupiter", "Saturn"], answer: "Jupiter" }
+        ];
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionData = quizData[currentQuestion];
+            document.getElementById("question").textContent = questionData.question;
+            document.getElementById("options").innerHTML = questionData.options.map((option, index) => 
+                `<button class='option' onclick='checkAnswer(this, "${option}")'>${String.fromCharCode(97 + index)}) ${option}</button>`
+            ).join('');
+        }
+
+        function checkAnswer(button, selectedOption) {
+            const correctAnswer = quizData[currentQuestion].answer;
+            button.classList.add(selectedOption === correctAnswer ? "correct" : "incorrect");
+            document.querySelectorAll(".option").forEach(btn => btn.disabled = true);
+            if (selectedOption === correctAnswer) score++;
+        }
+
+        function nextQuestion() {
+            if (++currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-container").innerHTML = `
+                    <h3>Quiz Completed!</h3>
+                    <p>Your score: ${score}</p>
+                    <button class="next-btn" onclick="window.location.href='leaderboard.html'">View Leaderboard</button>
+                `;
+                saveScore(score);
+            }
+        }
+
+        loadQuestion();
+    </script>
+
+</body>
+</html>

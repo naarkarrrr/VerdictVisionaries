@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPulseBot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .chat-interface {
+            margin-top: 50px;
+            width: 550px;
+            height: 500px;
+            background: linear-gradient(to bottom, #5b2d88,#ef5422);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+        .chat-input button {
+            margin-left: 10px;
+            background: #5b2d88;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+        .microphone-icon {
+            margin-left: 10px;
+            cursor: pointer;
+            color: #5b2d88;
+            font-size: 1.2rem;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .microphone-icon.active {
+            color: red;
+        }
+        .chat-bubble {
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .chat-bubble.user {
+            background: #ef5422;
+            color: white;
+            align-self: flex-end;
+        }
+        .chat-bubble.bot {
+            align-self: flex-start;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #1b5e20;
+            background-color: #e6ffe6;
+            border-top: 2px solid #006400;
+            width: 100%;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-interface">
+        <div class="chat-header">EduPulse</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-bubble bot">Hello user, I am EduPulseBot!</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)" />
+            <button onclick="sendMessage()">Send</button>
+            <i class="fa-solid fa-microphone-lines microphone-icon" id="microphone"></i>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Verdict Visionaries | EduPulse. All rights reserved.
+    </footer>
+
+    <script>
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        let recognition;
+        let isRecognizing = false;
+
+        if (window.SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            const microphoneIcon = document.getElementById('microphone');
+            const chatInput = document.getElementById('chatInput');
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                chatInput.value = transcript;
+            };
+
+            recognition.onstart = () => {
+                isRecognizing = true;
+                microphoneIcon.classList.add('active');
+            };
+
+            recognition.onend = () => {
+                isRecognizing = false;
+                microphoneIcon.classList.remove('active');
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                microphoneIcon.classList.remove('active');
+            };
+
+            microphoneIcon.addEventListener('click', () => {
+                if (!isRecognizing) {
+                    recognition.start();
+                } else {
+                    recognition.stop();
+                }
+            });
+        } else {
+            alert('Speech recognition is not supported in this browser. Try using Google Chrome.');
+        }
+
+        async function sendMessage() {
+            const chatInput = document.getElementById("chatInput");
+            const chatMessages = document.getElementById("chatMessages");
+            const userMessage = chatInput.value.trim();
+
+            if (!userMessage) return;
+
+            if (recognition && isRecognizing) {
+                recognition.stop();
+            }
+
+            const userBubble = document.createElement("div");
+            userBubble.className = "chat-bubble user";
+            userBubble.textContent = userMessage;
+            chatMessages.appendChild(userBubble);
+
+            chatInput.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const botBubble = document.createElement("div");
+            botBubble.className = "chat-bubble bot";
+            botBubble.innerHTML = '<img src="https://i.pinimg.com/originals/ec/06/5b/ec065b89d758f757fc2de597612648d2.gif" style="width: 40px; height: 40px;">';
+            chatMessages.appendChild(botBubble);
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+
+                const data = await response.json();
+                botBubble.innerHTML = data.response;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                speakText(data.response);
+
+            } catch (error) {
+                console.error("Error:", error);
+                botBubble.innerHTML = "Unable to connect to chatbot.";
+            }
+        }
+
+        function isEducationalQuery(message) {
+            const nonEducationalKeywords = ["movie", "game", "sports", "music", "fun", "joke", "meme"];
+            const badWords = ["motherfucker", "shit", "damn", "bitch", "asshole", "bastard", "dick", "piss", "crap", "slut", "fuck", "cunt", "douche", "moron", "jackass", "prick", "wanker", "twat", "bollocks", "bugger"]; 
+            const lowerMessage = message.toLowerCase();
+            
+            if (nonEducationalKeywords.some(keyword => lowerMessage.includes(keyword))) {
+                return "⚠️ Only educational queries are allowed.";
+            }
+            if (badWords.some(word => lowerMessage.includes(word))) {
+                return "⚠️ Inappropriate language is not allowed.";
+            }
+            return null;
+        }
+
+        async function sendMessage() {
+            const chatInput = document.getElementById("chatInput");
+            const chatMessages = document.getElementById("chatMessages");
+            const userMessage = chatInput.value.trim();
+
+            if (!userMessage) return;
+
+            const userBubble = document.createElement("div");
+            userBubble.className = "chat-bubble user";
+            userBubble.textContent = userMessage;
+            chatMessages.appendChild(userBubble);
+
+            chatInput.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const botBubble = document.createElement("div");
+            botBubble.className = "chat-bubble bot";
+            chatMessages.appendChild(botBubble);
+
+            const restrictionMessage = isEducationalQuery(userMessage);
+            if (restrictionMessage) {
+                botBubble.innerHTML = restrictionMessage;
+                speakText(restrictionMessage);
+                return;
+            }
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+
+                const data = await response.json();
+                botBubble.innerHTML = data.response;
+                speakText(data.response);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error("Error:", error);
+                botBubble.innerHTML = "Unable to connect to chatbot.";
+                speakText("Unable to connect to chatbot.");
+            }
+        }
+
+        function speakText(text) {
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 1.2;
+            window.speechSynthesis.speak(speech);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>

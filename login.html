@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>EduPulse | Login</title>
+    <link rel="shortcut icon" href="assets/images/logo/favourite_icon_1.svg">
+
+    <!-- Framework - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+
+    <!-- Icon Font - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/fontawesome.css">
+
+    <!-- Animation - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
+
+    <!-- Cursor - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/cursor.css">
+
+    <!-- Carousel - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/slick.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/slick-theme.css">
+
+    <!-- Video & Image Popup - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/magnific-popup.css">
+
+    <!-- Vanilla Calendar - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/vanilla-calendar.min.css">
+
+    <!-- Custom - CSS Include -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <script type="module" src="/assets/js/login.js" defer></script>
+  </head>
+
+
+  <body>
+
+    <!-- Body Wrap - Start -->
+    <div class="page_wrapper">
+
+      <!-- Back To Top - Start -->
+      <div class="backtotop">
+        <a href="#" class="scroll">
+          <i class="far fa-arrow-up"></i>
+        </a>
+      </div>
+      <!-- Back To Top - End -->
+
+      <!-- Site Header - Start
+      ================================================== -->
+      <!-- <header class="site_header site_header_1">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col col-lg-3 col-5">
+              <div class="site_logo">
+                <a class="site_link" href="index.html">
+                  <img src="assets/images/logo/EduPulse.svg" alt="EduPulse - Online Learning Platform">
+                </a>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </header> -->
+      <!-- Site Header - End
+      ================================================== -->
+
+      <!-- Main Body - Start
+      ================================================== -->
+      <main class="page_content">
+
+        <!-- Register Section - Start
+        ================================================== -->
+        <section class="register_section section_space_lg">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col col-lg-5">
+                <h1 class="register_heading text-center">Account Login</h1>
+                <p class="register_heading_description text-center">
+                  Please enter your User/Email & Password
+                </p>
+                <form action="#">
+                  <div class="register_form signup_login_form">
+                    <div class="form_item">
+                      <input type="email" name="email" id="email" placeholder="Username or Email">
+                    </div>
+                    <div class="form_item">
+                      <input type="password" name="password" id="password" placeholder="**********">
+                    </div>
+                    <div class="remenber_forget row mb-3 align-items-center justify-content-between">
+                      <div class="col col-6">
+                        <div class="checkbox_item mb-0">
+                          <input id="checkbox_remenber" type="checkbox">
+                          <label for="checkbox_remenber">Remember me</label>
+                        </div>
+                      </div>
+                      <div class="col col-6">
+                        <div class="forget_password text-end">
+                          <a href="#!">Forget Password</a>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" id="submit" class="btn btn_dark mb-5">
+                      <span>
+                        <small>Login Now</small>
+                        <small>Login Now</small>
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Register Section - End
+        ================================================== -->
+
+      </main>
+      <!-- Main Body - End
+      ================================================== -->
+      
+    </div>
+    <!-- Body Wrap - End -->
+
+    <!-- Framework - Jquery Include -->
+     
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap-dropdown-ml-hack.js"></script>
+
+    <!-- animation - jquery include -->
+    <script src="assets/js/cursor.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/tilt.min.js"></script>
+    <script src="assets/js/parallax.min.js"></script>
+    <script src="assets/js/parallax-scroll.js"></script>
+
+    <!-- Carousel - Jquery Include -->
+    <script src="assets/js/slick.min.js"></script>
+
+    <!-- Video & Image Popup - Jquery Include -->
+    <script src="assets/js/magnific-popup.min.js"></script>
+
+    <!-- Counter Up - Jquery Include -->
+    <script src="assets/js/waypoint.js"></script>
+    <script src="assets/js/counterup.min.js"></script>
+
+    <!-- Countdown Timer - jquery include -->
+    <script src="assets/js/countdown.js"></script>
+
+    <!-- Vanilla Calendar - Jquery Include -->
+    <script src="assets/js/vanilla-calendar.min.js"></script>
+
+    <!-- Custom - Jquery Include -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+      firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+              // Redirect to homepage after login
+              window.location.href = "index.html";
+          }
+      });
+    
+      function loginUser() {
+          let email = document.getElementById("email").value;
+          let password = document.getElementById("password").value;
+    
+          firebase.auth().signInWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                  window.location.href = "index.html"; // Redirect after successful login
+              })
+              .catch((error) => {
+                  alert(error.message);
+              });
+      }
+    </script>
+    
+
+  </body>
+</html>
