@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
         import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
@@ -62,7 +63,7 @@
         body {
             font-family: "Poppins", sans-serif;
             text-align: center;
-            background: linear-gradient(135deg, #5b2d88, #ef5422);
+            background: #ffb300;
             color: white;
             padding: 20px;
         }
@@ -123,11 +124,48 @@
             font-size: 20px;
             font-weight: bold;
         }
+        .site_header .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+                }
+                .site_header {
+                    position: relative; /* Ensure it is not fixed */
+                    z-index: 10; /* Keep it above content */
+                    background-color: transparent; /* Ensure visibility */
+                        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
+    <!-- 🔹 Header Added Here -->
+    <header class="site_header site_header_2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col col-lg-3 col-5">
+                    <div class="site_logo">
+                        <a class="site_link" href="index.html">
+                            <img src="assets/images/logo/EduPulse.svg" alt="EduPulse - Online Learning Platform">
+                        </a>
+                    </div>
+                </div>
+                <div class="col col-lg-6 col-2">
+                    <nav class="main_menu navbar navbar-expand-lg">
+                        <div class="main_menu_inner collapse navbar-collapse justify-content-center" id="main_menu_dropdown">
+                            <ul class="main_menu_list unordered_list_center">
+                                <li><a class="nav-link" href="index.html">Home</a></li>
+                                <li><a class="nav-link" href="courses.html">Courses</a></li>
+                                <li><a class="nav-link" href="#">AI Mentor</a></li>
+                                <li  class="active"><a class="nav-link" href="quiz.html">Challenges</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
 </head>
 <body>
     <div class="container">

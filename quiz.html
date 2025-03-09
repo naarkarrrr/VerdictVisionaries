@@ -33,7 +33,7 @@
 
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    document.getElementById("user-info").textContent = `Logged in as: ${userData.firstName} ${userData.lastName}`;
+                    document.getElementById("user-info").textContent = `Name: ${userData.firstName} ${userData.lastName}`;
                     currentUser.fullName = `${userData.firstName} ${userData.lastName}`;
                 } else {
                     const fullName = user.displayName ? user.displayName.split(" ") : ["Unknown", "User"];
@@ -130,7 +130,7 @@
             margin-top: 20px;
         }
         .next-btn {
-            background: #ffcc00;
+            background: #ffcc00 !important;
             padding: 10px 20px;
             font-size: 18px;
             font-weight: bold;
@@ -138,10 +138,13 @@
             cursor: pointer;
             border-radius: 10px;
             transition: all 0.3s;
+            color: black;
         }
+        
         .next-btn:hover {
-            background: #ff9900;
+            background: #ff9900 !important;
         }
+        
         .site_header .row {
     display: flex;
     align-items: center;
@@ -187,7 +190,8 @@
         <div id="quiz-container">
             <p id="question" class="question"></p>
             <div id="options"></div>
-            <button class="next-btn" onclick="nextQuestion()">Next</button>
+            <button id="next-btn" class="next-btn" onclick="nextQuestion()" disabled>Next</button>
+            
         </div>
         <p id="score"></p>
     </div>
@@ -198,24 +202,28 @@
             { question: "2. What is the worst-case time complexity of searching in an unsorted array?", options: ["O(1)", "O(log n)", "O(n)", "O(n²)"], answer: "O(n)" },
             { question: "3. Which of the following data structures is best suited for implementing a priority queue?", options: ["Stack", "Queue", "Heap", "Linked List"], answer: "Heap" }
         ];
+    
         let currentQuestion = 0;
         let score = 0;
-
+    
         function loadQuestion() {
             const questionData = quizData[currentQuestion];
             document.getElementById("question").textContent = questionData.question;
             document.getElementById("options").innerHTML = questionData.options.map((option, index) => 
                 `<button class='option' onclick='checkAnswer(this, "${option}")'>${String.fromCharCode(97 + index)}) ${option}</button>`
             ).join('');
+            
+            document.getElementById("next-btn").disabled = true; // Disable next button initially
         }
-
+    
         function checkAnswer(button, selectedOption) {
             const correctAnswer = quizData[currentQuestion].answer;
             button.classList.add(selectedOption === correctAnswer ? "correct" : "incorrect");
             document.querySelectorAll(".option").forEach(btn => btn.disabled = true);
             if (selectedOption === correctAnswer) score++;
+            document.getElementById("next-btn").disabled = false; // Enable next button after selection
         }
-
+    
         function nextQuestion() {
             if (++currentQuestion < quizData.length) {
                 loadQuestion();
@@ -228,10 +236,14 @@
                 saveScore(score);
             }
         }
-
+    
         loadQuestion();
     </script>
-        </script>
+    
+    
+    
+    
+       
 
 
 </body>
