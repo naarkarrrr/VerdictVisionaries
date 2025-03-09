@@ -98,7 +98,34 @@
           }
       };
   </script>
-
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let link = document.getElementById("quizLink");
+        let hideUntil = localStorage.getItem("hideQuizLinkUntil");
+    
+        if (hideUntil && Date.now() < hideUntil) {
+            link.style.display = "none";
+            let remainingTime = hideUntil - Date.now();
+            setTimeout(() => {
+                link.style.display = "inline-block";
+                localStorage.removeItem("hideQuizLinkUntil");
+            }, remainingTime);
+        }
+    });
+    
+    function handleClick(event) {
+        let link = document.getElementById("quizLink");
+    
+        // Store timestamp in localStorage to track when it should reappear
+        let hideUntil = Date.now() + 60000; // 60 seconds from now
+        localStorage.setItem("hideQuizLinkUntil", hideUntil);
+    
+        // Allow navigation, then hide the link after a slight delay
+        setTimeout(() => {
+            link.style.display = "none";
+        }, 100);
+    }
+    </script>
   </head>
 
 
@@ -135,8 +162,6 @@
                     <li><a class="nav-link" href="index.html">Home</a></li>
                     <li class="active"><a class="nav-link" href="#">Courses</a></li>
                     <li><a class="nav-link" href="#">AI Mentor</a></li>
-                    <li><a class="nav-link" href="quiz.html">Challenges</a></li>
-
                   </ul>
                 </div>
               </nav>
@@ -202,26 +227,26 @@
                 <div class="content_wrap">
                   <div class="section_heading">
                     <h2 class="heading_text mb-0">
-                      What You will Learn
+                      What You will Learn?
                     </h2>
                   </div>
                   <ul class="info_list unordered_list_block">
                     <li>
                       <i class="fas fa-check"></i>
                       <span>
-                        Fermentum iaculis eu non diam phasellus vestibulum. Porta non pulvinar neque laoreet suspendisse. Justo nec ultrices dui sapien proin sed libero
+                        <b>Fundamental Data Structures –</b> Understanding arrays, linked lists, stacks, queues, trees, and graphs, and how they are used in data science applications.
                       </span>
                     </li>
                     <li>
                       <i class="fas fa-check"></i>
                       <span>
-                        At consectetur lorem donec massa sapien. Pulvinar sapien et ligula ullamcorper malesuada proin
+                       <b>Algorithmic Thinking – </b> Learning sorting, searching, and optimization techniques like divide and conquer, dynamic programming, and greedy algorithms to solve data problems efficiently.
                       </span>
                     </li>
                     <li>
                       <i class="fas fa-check"></i>
                       <span>
-                        Quisque id diam vel quam elementum pulvinar. Eget felis eget nunc lobortis mattis aliquam faucibus purus.
+                        <b>Data Manipulation & Performance Optimization – </b>Applying data structures and algorithms to process, clean, and analyze large datasets while optimizing for time and space complexity.
                       </span>
                     </li>
                   </ul>
@@ -310,17 +335,18 @@
                     </div>
                   </div>
                   <p>
-                    Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque. Natoque penatibus et magnis dis parturient montes nascetur.
+                    This course covers the fundamental data structures such as arrays, linked lists, stacks, queues, hash tables, trees, and graphs, along with their real-world applications in data science. You will learn how to implement these structures efficiently and understand their strengths and weaknesses in handling large datasets. Additionally, the course introduces essential algorithmic techniques like sorting, searching, recursion, dynamic programming, and graph algorithms, ensuring you can optimize data processing tasks effectively.
                   </p>
                   <p>
-                    Elit ullamcorper dignissim cras tincidunt lobortis feugiat. Vitae sapien pellentesque habitant morbi tristique senectus et netus.
+                    Beyond theory, this course emphasizes practical applications, where you will work on hands-on coding exercises and real-world case studies. You'll explore how data structures and algorithms improve data analysis, machine learning workflows, and large-scale data processing. By the end, you'll have a strong foundation to write efficient code and solve complex data challenges in data science.
                   </p>
-                  <a class="btn border_dark btn_small" href="quiz.html">
+                  <a id="quizLink" class="btn border_dark btn_small" href="quiz.html" onclick="handleClick(event)">
                     <span>
                       <small><img src="assets/images/icon/icon_clip.svg" alt="EduPulse – Online Learning Platform"> Give Quiz</small>
                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="EduPulse – Online Learning Platform"> Give Quiz</small>
                     </span>
                   </a>
+                  
                 </div>
               </div>
 
@@ -334,19 +360,15 @@
                       <div class="accordion-body">
                         <p class="completed_progress"><span>1/4</span> Completed</p>
                         <div class="checkbox_item">
-                          <input id="checkbox_1_1" type="checkbox" checked>
                           <label for="checkbox_1_1">1. Basic Python Syntax introduction</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_1_2" type="checkbox">
                           <label for="checkbox_1_2">2. Expressions, Numbers, and Type Conversions</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_1_3" type="checkbox">
                           <label for="checkbox_1_3">3. Morbi Non Arcu Risus Numbers Varius Quam</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_1_4" type="checkbox">
                           <label for="checkbox_1_4">4. Branching with if Statements</label>
                         </div>
                       </div>
@@ -360,19 +382,15 @@
                       <div class="accordion-body">
                         <p class="completed_progress"><span>1/4</span> Completed</p>
                         <div class="checkbox_item">
-                          <input id="checkbox_2_1" type="checkbox" checked>
                           <label for="checkbox_2_1">1. Basic Python Syntax introduction</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_2_2" type="checkbox">
                           <label for="checkbox_2_2">2. Expressions, Numbers, and Type Conversions</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_2_3" type="checkbox">
                           <label for="checkbox_2_3">3. Morbi Non Arcu Risus Numbers Varius Quam</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_2_4" type="checkbox">
                           <label for="checkbox_2_4">4. Branching with if Statements</label>
                         </div>
                       </div>
@@ -386,19 +404,15 @@
                       <div class="accordion-body">
                         <p class="completed_progress"><span>1/4</span> Completed</p>
                         <div class="checkbox_item">
-                          <input id="checkbox_3_1" type="checkbox" checked>
                           <label for="checkbox_3_1">1. Basic Python Syntax introduction</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_3_2" type="checkbox">
                           <label for="checkbox_3_2">2. Expressions, Numbers, and Type Conversions</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_3_3" type="checkbox">
                           <label for="checkbox_3_3">3. Morbi Non Arcu Risus Numbers Varius Quam</label>
                         </div>
                         <div class="checkbox_item">
-                          <input id="checkbox_3_4" type="checkbox">
                           <label for="checkbox_3_4">4. Branching with if Statements</label>
                         </div>
                       </div>
@@ -427,7 +441,7 @@
                   <div class="details_content ps-lg-5">
                     <h2 class="details_item_title">Course Instructors</h2>
                     <h3 class="mentor_name">Alex Edwards</h3>
-                    <h4 class="mentor_designation">Fullstack developer</h4>
+                    <h4 class="mentor_designation">AI developer</h4>
                     <ul class="meta_info_list unordered_list">
                       <li>
                         <i class="fas fa-clock"></i>
@@ -439,7 +453,7 @@
                       </li>
                     </ul>
                     <p>
-                      Scelerisque viverra mauris in aliquam. Mauris pharetra et ultrices neque ornare aenean. Diam quis enim lobortis scelerisque fermentum dui faucibus in. Venenatis lectus magna fringilla urna porttitor rhoncus dolor. Sem fringilla ut morbi tincidunt augue interdum velit euismod in. Blandit volutpat maecenas volutpat blandit aliquam etiam erat velit
+                      <b>Alex Edwards</b> is an experienced <b>AI Developer</b>with a strong background in machine learning, data science, and software engineering. With years of expertise in designing and optimizing AI models, Alex has worked on various real-world applications, including predictive analytics, natural language processing, and big data processing. Passionate about teaching, he has mentored aspiring data scientists and engineers, helping them build a solid foundation in data structures, algorithms, and AI-driven solutions. In this course, Alex brings his industry insights and hands-on experience to help learners understand complex concepts in a simple and practical way.
                     </p>
                     <div class="row">
                       <div class="col col-lg-4">
@@ -583,7 +597,7 @@
                     </a>
                   </div>
                   <p>
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+                    <b>Igniting Minds,<br>Powering Futures!</b>
                   </p>
                   <ul class="social_links unordered_list">
                     <li>
