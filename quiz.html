@@ -78,16 +78,15 @@
             margin: 0;
             padding: 0;
         } */
-        .site_header {
+    .site_header {
     position: relative; /* Ensure it is not fixed */
     z-index: 10; /* Keep it above content */
     background-color: white; /* Ensure visibility */
-    width: 100%;
-}
+        }
 
 .Quiz-container {
     max-width: 500px;
-    margin: 100px auto 5%; /* Add top margin to push content below navbar */
+    margin: 40px auto 5%; /* Add top margin to push content below navbar */
     background: rgba(255, 255, 255, 0.15);
     padding: 30px;
     border-radius: 15px;
@@ -143,12 +142,19 @@
         .next-btn:hover {
             background: #ff9900;
         }
+        .site_header .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+        }
+
     </style>
 </head>
 <body>
 
     <!-- 🔹 Header Added Here -->
-    <header class="site_header site_header_1">
+    <header class="site_header site_header_2">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col col-lg-3 col-5">
@@ -163,9 +169,9 @@
                         <div class="main_menu_inner collapse navbar-collapse justify-content-center" id="main_menu_dropdown">
                             <ul class="main_menu_list unordered_list_center">
                                 <li><a class="nav-link" href="index.html">Home</a></li>
-                                <li class="active"><a class="nav-link" href="#">Courses</a></li>
+                                <li><a class="nav-link" href="courses.html">Courses</a></li>
                                 <li><a class="nav-link" href="#">AI Mentor</a></li>
-                                <li><a class="nav-link" href="#">Challenges</a></li>
+                                <li  class="active"><a class="nav-link" href="quiz.html">Challenges</a></li>
                             </ul>
                         </div>
                     </nav>
@@ -225,6 +231,8 @@
 
         loadQuestion();
     </script>
+        </script>
+
 
 </body>
 </html>

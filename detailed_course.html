@@ -35,6 +35,70 @@
     <!-- Custom - CSS Include -->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+      const firebaseConfig = {
+          apiKey: "AIzaSyCRMqoFCjV8QFTRl5S7COzGSSGNwJlK1n8",
+          authDomain: "edupulse-8ce1e.firebaseapp.com",
+          projectId: "edupulse-8ce1e",
+          storageBucket: "edupulse-8ce1e.appspot.com",
+          messagingSenderId: "618388294203",
+          appId: "1:618388294203:web:100a83ac711af641826a1e"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+      let currentUser = null;
+
+      onAuthStateChanged(auth, async (user) => {
+          if (user) {
+              currentUser = user;
+              const userDocRef = doc(db, "users", user.uid);
+              const userDoc = await getDoc(userDocRef);
+
+              if (userDoc.exists()) {
+                  const userData = userDoc.data();
+                  document.getElementById("user-info").textContent = `Logged in as: ${userData.firstName} ${userData.lastName}`;
+                  currentUser.fullName = `${userData.firstName} ${userData.lastName}`;
+              } else {
+                  const fullName = user.displayName ? user.displayName.split(" ") : ["Unknown", "User"];
+                  const firstName = fullName[0];
+                  const lastName = fullName[1] || "User";
+
+                  await setDoc(userDocRef, { firstName, lastName });
+
+                  document.getElementById("user-info").textContent = `Logged in as: ${firstName} ${lastName}`;
+                  currentUser.fullName = `${firstName} ${lastName}`;
+              }
+          } else {
+              currentUser = null;
+              document.getElementById("user-info").textContent = "Not logged in";
+          }
+      });
+
+      window.saveScore = async function (score) {
+          if (!currentUser) {
+              console.error("No user is logged in!");
+              return;
+          }
+
+          try {
+              await addDoc(collection(db, "quizScores"), {
+                  fullName: currentUser.fullName,
+                  score: score,
+                  timestamp: new Date()
+              });
+              console.log("Score saved successfully!");
+          } catch (error) {
+              console.error("Error saving score: ", error);
+          }
+      };
+  </script>
+
   </head>
 
 
@@ -71,7 +135,7 @@
                     <li><a class="nav-link" href="index.html">Home</a></li>
                     <li class="active"><a class="nav-link" href="#">Courses</a></li>
                     <li><a class="nav-link" href="#">AI Mentor</a></li>
-                    <li><a class="nav-link" href="#">Challenges</a></li>
+                    <li><a class="nav-link" href="quiz.html">Challenges</a></li>
 
                   </ul>
                 </div>
@@ -240,7 +304,7 @@
                   <div class="intro_video mb-4">
                     <div class="video_wrap">
                       <img src="assets/images/video/video_poster_2.jpg" alt="EduPulse – Online Learning Platform">
-                      <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                      <a class="video_play_btn popup_video" href="https://livepush.io/watch?v=l99z9UkarmkyEFO">
                         <span class="icon"><i class="fas fa-play"></i></span>
                       </a>
                     </div>
@@ -541,13 +605,13 @@
                       <h3 class="footer_widget_title">Links</h3>
                       <ul class="page_list unordered_list_block">
                         <li>
-                          <a href="about.html">
+                          <a href="index.html">
                             <span class="item_icon"><i class="fas fa-caret-right"></i></span>
                             <span class="item_text">Home</span>
                           </a>
                         </li>
                         <li>
-                          <a href="course.html">
+                          <a href="courses.html">
                             <span class="item_icon"><i class="fas fa-caret-right"></i></span>
                             <span class="item_text">Courses</span>
                           </a>
@@ -559,13 +623,13 @@
                           </a>
                         </li>
                         <li>
-                          <a href="pricing.html">
+                          <a href="#">
                             <span class="item_icon"><i class="fas fa-caret-right"></i></span>
                             <span class="item_text">AI ChatBot</span>
                           </a>
                         </li>
                         <li>
-                          <a href="event.html">
+                          <a href="quiz.html">
                             <span class="item_icon"><i class="fas fa-caret-right"></i></span>
                             <span class="item_text">Challenges</span>
                           </a>

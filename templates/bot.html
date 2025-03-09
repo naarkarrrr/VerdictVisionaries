@@ -109,6 +109,11 @@
     </style>
 </head>
 <body>
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/EduPulse.svg') }}" alt="EduPulse Logo" class="bot-logo">
+    </div>
+
+
     <div class="chat-interface">
         <div class="chat-header">EduPulse</div>
         <div class="chat-messages" id="chatMessages">
@@ -120,10 +125,6 @@
             <i class="fa-solid fa-microphone-lines microphone-icon" id="microphone"></i>
         </div>
     </div>
-
-    <footer>
-        &copy; 2025 Verdict Visionaries | EduPulse. All rights reserved.
-    </footer>
 
     <script>
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

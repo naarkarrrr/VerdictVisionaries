@@ -11,12 +11,6 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 user_history = []
 response_history = []
 
-# List of restricted words (add more as needed)
-restricted_words = {"badword1", "badword2", "abuse", "offensive"}  # Replace with actual words
-
-def contains_restricted_words(text):
-    return any(word in text.lower() for word in restricted_words)
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -33,21 +27,15 @@ def chat():
         if not user_input:
             return jsonify({'response': "⚠️ Please enter a valid message."}), 400
 
-        # Check for restricted content
-        if contains_restricted_words(user_input):
-            return jsonify({'response': "⚠️ Please maintain a respectful and educational conversation."}), 400
-
         # Store conversation history
         user_history.append(user_input)
 
         # Construct AI prompt
         prompt = (
-            "You are an AI Educator developed by Verdict Visionaries Team. "
-            "Your goal is to provide clear, educational, and helpful answers on academic topics. "
-            "Avoid any inappropriate or unrelated content. "
+            "You are a Medical Assistant Bot developed by MedTrack Team. "
             f"Previous questions: {user_history}, "
             f"Previous responses: {response_history}. "
-            f"Answer: {user_input} in an educational and respectful manner."
+            f"Answer: {user_input} clearly and concisely."
         )
 
         # Generate AI response
