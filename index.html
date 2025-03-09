@@ -35,6 +35,38 @@
     <!-- Custom - CSS Include -->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
+    <script>
+      function searchCourses() {
+          let input = document.getElementById("searchBar").value.toLowerCase();
+          let courses = document.querySelectorAll(".course");
+      
+          courses.forEach(course => {
+              let text = course.textContent.toLowerCase();
+              course.style.display = text.includes(input) ? "inline-block" : "none";
+          });
+      }
+      </script>
+      <style>
+        #searchBar {
+            width: 300px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid purple;
+        }
+        #courseList {
+            margin-top: 20px;
+        }
+        .course {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid purple;
+            border-radius: 5px;
+            background: white;
+            color: purple;
+            font-weight: bold;
+        }
+      </style>
   </head>
 
 
@@ -154,25 +186,21 @@
                 </p>
                 <form action="#">
                   <div class="form_item">
-                    <input type="search" name="search" placeholder="What do you want to learn ?">
-                    <button type="submit" class="btn btn_dark">
-                      <span>
-                        <small>Search</small>
-                        <small>Search</small>
-                      </span>
+                    <input type="text" id="searchBar" placeholder="What do you want to learn?" onkeyup="searchCourses()">
+                    <!-- <button onclick="searchCourses()">Search</button> -->
                     </button>
                   </div>
                 </form>
-                <ul class="tags_list unordered_list">
-                  <li><a href="#!">Web Development</a></li>
-                  <li><a href="#!">BackEnd</a></li>
-                  <li><a href="#!">FLask</a></li>
-                  <li><a href="#!">C++</a></li>
-                  <li><a href="#!">Maths</a></li>
-                  <li><a href="#!">Physics</a></li>
-                  <li><a href="#!">Chemistry</a></li>
-                  <li><a href="#!">YoGa</a></li>
-                  <li><a href="#!">Meditation</a></li>
+                <ul class="tags_list unordered_list" id="courseList">
+                  <li><a class="course" href="#">Web Development</a></li>
+                  <li><a class="course" href="#">BackEnd</a></li>
+                  <li><a class="course" href="detailed_course.html">Data Science</a></li>
+                  <li><a class="course" href="#">C++</a></li>
+                  <li><a class="course" href="#">Maths</a></li>
+                  <li><a class="course" href="#">Physics</a></li>
+                  <li><a class="course" href="#">Chemistry</a></li>
+                  <li><a class="course" href="#">YoGa</a></li>
+                  <li><a class="course" href="#">Meditation</a></li>
                 </ul>
               </div>
               <div class="col col-lg-6">
